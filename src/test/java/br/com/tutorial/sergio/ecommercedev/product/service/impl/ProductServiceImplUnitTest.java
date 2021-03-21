@@ -7,12 +7,14 @@ import br.com.tutorial.sergio.ecommercedev.product.domain.mapper.ProductMapper;
 import br.com.tutorial.sergio.ecommercedev.product.domain.mother.ProductMother;
 import br.com.tutorial.sergio.ecommercedev.product.domain.request.ProductCreateRequest;
 import br.com.tutorial.sergio.ecommercedev.product.domain.response.ProductFindByIdResponse;
+import br.com.tutorial.sergio.ecommercedev.product.domain.response.ProductListResponse;
 import br.com.tutorial.sergio.ecommercedev.product.repository.ProductRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.*;
@@ -71,5 +73,21 @@ class ProductServiceImplUnitTest {
                 .withMessage(ExceptionMessage.PRODUCT_NOT_FOUND.getMessage());
 
         verify(productRepository, times(1)).findById(id);
+    }
+
+    @Test
+    void whenFindAllThenReturnListOfProductListResponse() {
+        List<Product> productList = ProductMother.getProductList();
+        List<ProductListResponse> productListResponseList = ProductMother.getProductListResponseList();
+
+        given(productRepository.findAll()).willReturn(productList);
+        given(productMapper.toProductListResponseList(productList)).willReturn(productListResponseList);
+
+        List<ProductListResponse> response = productService.findAll();
+
+        assertThat(response).isEqualTo(productListResponseList);
+
+        verify(productRepository, times(1)).findAll();
+        verify(productMapper, times(1)).toProductListResponseList(productList);
     }
 }

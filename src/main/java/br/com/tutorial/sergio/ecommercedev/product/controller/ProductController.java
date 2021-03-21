@@ -2,12 +2,14 @@ package br.com.tutorial.sergio.ecommercedev.product.controller;
 
 import br.com.tutorial.sergio.ecommercedev.product.domain.request.ProductCreateRequest;
 import br.com.tutorial.sergio.ecommercedev.product.domain.response.ProductFindByIdResponse;
+import br.com.tutorial.sergio.ecommercedev.product.domain.response.ProductListResponse;
 import br.com.tutorial.sergio.ecommercedev.product.service.ProductService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/v1/products")
@@ -23,6 +25,11 @@ public class ProductController {
     public ResponseEntity<Void> create(@RequestBody @Valid ProductCreateRequest productCreateRequest) {
         productService.create(productCreateRequest);
         return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<ProductListResponse>> findAll() {
+        return ResponseEntity.ok(productService.findAll());
     }
 
     @GetMapping("/{id}")
