@@ -6,11 +6,13 @@ import br.com.tutorial.sergio.ecommercedev.product.domain.exception.message.Exce
 import br.com.tutorial.sergio.ecommercedev.product.domain.mapper.ProductMapper;
 import br.com.tutorial.sergio.ecommercedev.product.domain.mother.ProductMother;
 import br.com.tutorial.sergio.ecommercedev.product.domain.request.ProductCreateRequest;
+import br.com.tutorial.sergio.ecommercedev.product.domain.request.ProductUpdateRequest;
 import br.com.tutorial.sergio.ecommercedev.product.domain.response.ProductFindByIdResponse;
 import br.com.tutorial.sergio.ecommercedev.product.domain.response.ProductListResponse;
 import br.com.tutorial.sergio.ecommercedev.product.repository.ProductRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -89,5 +91,40 @@ class ProductServiceImplUnitTest {
 
         verify(productRepository, times(1)).findAll();
         verify(productMapper, times(1)).toProductListResponseList(productList);
+    }
+
+    @Test
+    void givenValidParametersWhenUpdateThenReturnSuccess() {
+        Long id = 1L;
+        ProductUpdateRequest productUpdateRequest = ProductMother.getProductUpdateRequest();
+        Product product = ProductMother.getProduct();
+
+        given(productRepository.findById(id)).willReturn(Optional.of(product));
+
+        productService.update(id, productUpdateRequest);
+
+        verify(productRepository, times(1)).findById(id);
+
+        ArgumentCaptor<Product> argumentCaptor = ArgumentCaptor.forClass(Product.class);
+        verify(productRepository, times(1)).save(argumentCaptor.capture());
+
+        Product capturedValue = argumentCaptor.getValue();
+
+        assertThat(capturedValue.getValue()).isEqualTo(productUpdateRequest.getValue());
+        assertThat(capturedValue.getName()).isEqualTo(productUpdateRequest.getName());
+    }
+
+    @Test
+    void givenProductDoesNotExistWhenUpdateThenThrowNotFoundException() {
+        Long id = 1L;
+        ProductUpdateRequest productUpdateRequest = ProductMother.getProductUpdateRequest();
+
+        given(productRepository.findById(id)).willReturn(Optional.empty());
+
+        assertThatExceptionOfType(NotFoundException.class)
+                .isThrownBy(() -> productService.update(id, productUpdateRequest))
+                .withMessage(ExceptionMessage.PRODUCT_NOT_FOUND.getMessage());
+
+        verify(productRepository, times(1)).findById(id);
     }
 }

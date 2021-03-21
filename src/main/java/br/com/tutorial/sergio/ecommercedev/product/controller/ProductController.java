@@ -1,6 +1,7 @@
 package br.com.tutorial.sergio.ecommercedev.product.controller;
 
 import br.com.tutorial.sergio.ecommercedev.product.domain.request.ProductCreateRequest;
+import br.com.tutorial.sergio.ecommercedev.product.domain.request.ProductUpdateRequest;
 import br.com.tutorial.sergio.ecommercedev.product.domain.response.ProductFindByIdResponse;
 import br.com.tutorial.sergio.ecommercedev.product.domain.response.ProductListResponse;
 import br.com.tutorial.sergio.ecommercedev.product.service.ProductService;
@@ -35,5 +36,12 @@ public class ProductController {
     @GetMapping("/{id}")
     public ResponseEntity<ProductFindByIdResponse> findById(@PathVariable Long id) {
         return ResponseEntity.ok(productService.findById(id));
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<Void> update(@PathVariable Long id,
+                                       @RequestBody @Valid ProductUpdateRequest productUpdateRequest) {
+        productService.update(id, productUpdateRequest);
+        return ResponseEntity.noContent().build();
     }
 }

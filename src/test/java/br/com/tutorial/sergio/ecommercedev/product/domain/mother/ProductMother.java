@@ -2,6 +2,7 @@ package br.com.tutorial.sergio.ecommercedev.product.domain.mother;
 
 import br.com.tutorial.sergio.ecommercedev.product.domain.entity.Product;
 import br.com.tutorial.sergio.ecommercedev.product.domain.request.ProductCreateRequest;
+import br.com.tutorial.sergio.ecommercedev.product.domain.request.ProductUpdateRequest;
 import br.com.tutorial.sergio.ecommercedev.product.domain.response.ProductFindByIdResponse;
 import br.com.tutorial.sergio.ecommercedev.product.domain.response.ProductListResponse;
 
@@ -14,15 +15,15 @@ public class ProductMother {
     }
 
     public static Product getProduct() {
-        return new Product(1L, "product name", 10.99);
+        return new Product(1L, "product", 10.99);
     }
 
     public static ProductCreateRequest getProductCreateRequest() {
-        return new ProductCreateRequest("product name", 10.99);
+        return new ProductCreateRequest("product create request", 20.99);
     }
 
     public static ProductFindByIdResponse getProductFindByIdResponse() {
-        return new ProductFindByIdResponse(1L, "product name", 299.0);
+        return new ProductFindByIdResponse(1L, "product find by id response", 30.99);
     }
 
     public static List<Product> getProductList() {
@@ -36,7 +37,7 @@ public class ProductMother {
     }
 
     public static ProductListResponse getProductListResponse() {
-        return new ProductListResponse(1L, "product name", 1.99);
+        return new ProductListResponse(1L, "product list response", 40.99);
     }
 
     public static List<ProductListResponse> getProductListResponseList() {
@@ -47,5 +48,9 @@ public class ProductMother {
         productListResponseList.add(getProductListResponse());
 
         return productListResponseList;
+    }
+
+    public static ProductUpdateRequest getProductUpdateRequest() {
+        return new ProductUpdateRequest("product update request", 50.99);
     }
 }
